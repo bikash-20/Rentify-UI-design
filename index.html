@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rentify – Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d1117;
+      --surface:   #161b22;
+      --surface2:  #1c2330;
+      --border:    #30363d;
+      --text:      #e6edf3;
+      --muted:     #8b949e;
+      --blue:      #3b82f6;
+      --blue-dark: #2563eb;
+      --green:     #22c55e;
+      --green-bg:  rgba(34,197,94,.12);
+      --radius:    10px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 58px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--blue);
+      letter-spacing: -.5px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: .875rem;
+      font-weight: 500;
+      transition: color .15s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-ai {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--blue);
+      font-size: .8rem;
+      font-weight: 600;
+      padding: .4rem .9rem;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      transition: background .15s;
+    }
+    .nav-ai:hover { background: rgba(59,130,246,.08); }
+
+    /* ── MAIN ── */
+    main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: .35rem;
+    }
+    .subtitle { color: var(--muted); font-size: .875rem; margin-bottom: 2rem; }
+
+    /* ── STAT CARDS ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+    }
+    .stat-label {
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .6rem;
+    }
+    .stat-value {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    /* ── FLEET TABLE ── */
+    .fleet-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .fleet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 1.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .fleet-header h2 { font-size: 1.1rem; font-weight: 700; }
+    .fleet-actions { display: flex; gap: .7rem; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .8rem;
+      font-weight: 600;
+      padding: .5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      transition: opacity .15s, background .15s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-rent {
+      background: var(--blue);
+      color: #fff;
+      font-size: .78rem;
+      padding: .38rem .85rem;
+      border-radius: 7px;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      text-align: left;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: .85rem 1.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .12s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface2); }
+    td {
+      padding: .95rem 1.6rem;
+      font-size: .875rem;
+      vertical-align: middle;
+    }
+    td.id { color: var(--muted); font-size: .82rem; }
+
+    /* category badge */
+    .badge {
+      display: inline-block;
+      padding: .25rem .7rem;
+      border-radius: 20px;
+      font-size: .75rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--surface2);
+    }
+
+    /* status pill */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      padding: .3rem .75rem;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 600;
+      background: var(--green-bg);
+      color: var(--green);
+      border: 1px solid rgba(34,197,94,.2);
+    }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+    /* ── CHAT FAB ── */
+    .fab {
+      position: fixed;
+      bottom: 1.8rem;
+      right: 1.8rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--blue);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 18px rgba(59,130,246,.4);
+      transition: transform .15s;
+    }
+    .fab:hover { transform: scale(1.08); }
+    .fab svg { width: 22px; height: 22px; fill: #fff; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { gap: 1.2rem; }
+    }
+    @media (max-width: 620px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      table { font-size: .8rem; }
+      td, thead th { padding: .75rem .9rem; }
+      main { padding: 1.5rem 1rem; }
+      h1 { font-size: 1.9rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <span class="logo">Rentify</span>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Dashboard</a></li>
+    <li><a href="#">Rent a Car</a></li>
+    <li><a href="#">Return</a></li>
+    <li><a href="#">History</a></li>
+    <li><a href="#">Charts</a></li>
+    <li><a href="#">Manage</a></li>
+  </ul>
+  <button class="nav-ai">✦ AI Assistant</button>
+</nav>
+
+<!-- ── MAIN ── -->
+<main>
+  <h1>Dashboard</h1>
+  <p class="subtitle">Fleet overview · Data saved permanently in database</p>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">Total Cars</div>
+      <div class="stat-value">6</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Available</div>
+      <div class="stat-value">6</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Rented Out</div>
+      <div class="stat-value">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Revenue</div>
+      <div class="stat-value">$0</div>
+    </div>
+  </div>
+
+  <!-- Fleet Table -->
+  <div class="fleet-card">
+    <div class="fleet-header">
+      <h2>Fleet Overview</h2>
+      <div class="fleet-actions">
+        <button class="btn btn-outline">⚙ Manage</button>
+        <button class="btn btn-primary">+ Rent</button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Brand</th>
+          <th>Model</th>
+          <th>Category</th>
+          <th>$/Day</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="id">C001</td>
+          <td>Toyota</td>
+          <td>Camry</td>
+          <td><span class="badge">Sedan</span></td>
+          <td>$60.0</td>
+          <td><span class="status-pill"><span class="status-dot"></span>Available</span></td>
+          <td><button class="btn btn-rent">Rent</button></td>
+        </tr>
+        <tr>
+          <td class="id">C002</td>
+          <td>Honda</td>
+          <td>Accord</td>
+          <td><span class="badge">Sedan</span></td>
+          <td>$70.0</td>
+          <td><span class="status-pill"><span class="status-dot"></span>Available</span></td>
+          <td><button class="btn btn-rent">Rent</button></td>
+        </tr>
+        <tr>
+          <td class="id">C003</td>
+          <td>Mahindra</td>
+          <td>Thar</td>
+          <td><span class="badge">SUV</span></td>
+          <td>$150.0</td>
+          <td><span class="status-pill"><span class="status-dot"></span>Available</span></td>
+          <td><button class="btn btn-rent">Rent</button></td>
+        </tr>
+        <tr>
+          <td class="id">C004</td>
+          <td>Ford</td>
+          <td>Mustang</td>
+          <td><span class="badge">Sports</span></td>
+          <td>$200.0</td>
+          <td><span class="status-pill"><span class="status-dot"></span>Available</span></td>
+          <td><button class="btn btn-rent">Rent</button></td>
+        </tr>
+        <tr>
+          <td class="id">C005</td>
+          <td>BMW</td>
+          <td>X5</td>
+          <td><span class="badge">Luxury</span></td>
+          <td>$250.0</td>
+          <td><span class="status-pill"><span class="status-dot"></span>Available</span></td>
+          <td><button class="btn btn-rent">Rent</button></td>
+        </tr>
+        <tr>
+          <td class="id">C006</td>
+          <td>Hyundai</td>
+          <td>Creta</td>
+          <td><span class="badge">SUV</span></td>
+          <td>$80.0</td>
+          <td><span class="status-pill"><span class="status-dot"></span>Available</span></td>
+          <td><button class="btn btn-rent">Rent</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- ── CHAT FAB ── -->
+<button class="fab" title="AI Assistant">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
+  </svg>
+</button>
+
+</body>
+</html>
